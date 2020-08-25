@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
+using DG.Tweening;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Transform center;
     Rigidbody[] rigidbodies;
     float speed;
+    EyeController[] eyeControllers;
+    bool isPressed;
     void Start()
     {
         rigidbodies = GetComponentsInChildren<Rigidbody>();
+        eyeControllers = GetComponentsInChildren<EyeController>();
+        foreach (var item in eyeControllers)
+        {
+            item.OnTriggerEnterEye = OnTriggerEnterEye;
+        }
     }
 
 
@@ -41,4 +48,31 @@ public class PlayerController : MonoBehaviour
             rigidbodies[i].velocity = vec * speed;
         }
     }
+
+    void OnTriggerEnterEye(Collider other)
+    {
+        if (isPressed) return;
+        if (other.gameObject.CompareTag("Trap"))
+        {
+            isPressed = true;
+            foreach (var rb in rigidbodies)
+            {
+                rb.isKinematic = true;
+            }
+            transform.localScale = new Vector3(1, 0.1f, 1);
+            transform.position -= Vector3.up * 2.5f;
+            DOVirtual.DelayedCall(1.5f, () =>
+            {
+                foreach (var rb in rigidbodies)
+                {
+                    rb.isKinematic = false;
+                }
+                transform.localScale = new Vector3(1, 1, 1);
+                transform.position += Vector3.up * 2.5f;
+                isPressed = false;
+            });
+        }
+    }
+
+
 }

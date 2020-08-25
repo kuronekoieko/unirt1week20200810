@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     EyeController[] eyeControllers;
     bool isPressed;
     bool isGoaled;
+    float strength;
     void Start()
     {
         rigidbodies = GetComponentsInChildren<Rigidbody>();
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
         {
             item.OnTriggerEnterEye = OnTriggerEnterEye;
         }
+        strength = Random.Range(1f, 2f);
     }
 
     void Update()
@@ -39,7 +41,7 @@ public class PlayerController : MonoBehaviour
     void AutoMoveForward()
     {
 
-        speed += Time.deltaTime * playerNum / 2;
+        speed += Time.deltaTime * strength;
         speed = Mathf.Clamp(speed, 0, 10);
 
         for (int i = 0; i < rigidbodies.Length; i++)
@@ -96,7 +98,8 @@ public class PlayerController : MonoBehaviour
     {
         if (isPressed) return;
         if (other.gameObject.CompareTag("Trap") == false) { return; }
-        if (playerNum == 0) SoundManager.i?.PlayOneShot(3);
+        SoundManager.i?.PlayOneShot(3);
+        speed = 0;
         isPressed = true;
         foreach (var rb in rigidbodies)
         {

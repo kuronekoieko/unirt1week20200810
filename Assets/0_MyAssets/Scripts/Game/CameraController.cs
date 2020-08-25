@@ -11,9 +11,11 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform centerTf;
     public static CameraController i;
+    Vector3 offset;
     void Start()
     {
         if (i == null) i = this;
+        offset = transform.position - centerTf.position;
     }
 
     void Update()
@@ -24,7 +26,7 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         var pos = transform.position;
-        pos.x = centerTf.position.x;
+        pos.x = (centerTf.position + offset).x;
         transform.position = pos;
     }
 }

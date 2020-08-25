@@ -16,8 +16,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        MoveForward();
+    }
 
-        if (Input.GetMouseButton(0))
+    void MoveForward()
+    {
+
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             speed += Time.deltaTime * 3;
         }

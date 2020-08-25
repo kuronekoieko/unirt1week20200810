@@ -12,7 +12,9 @@ using UniRx;
 /// </summary>
 public class GameCanvasManager : BaseCanvasManager
 {
-    [SerializeField] Text stageNumText;
+    [SerializeField] Text countDownText;
+    [SerializeField] Button startButton;
+    float timer;
 
     public override void OnStart()
     {
@@ -20,17 +22,25 @@ public class GameCanvasManager : BaseCanvasManager
 
         base.SetScreenAction(thisScreen: ScreenState.Game);
 
-        this.ObserveEveryValueChanged(currentStageIndex => Variables.currentStageIndex)
-            .Subscribe(currentStageIndex => { ShowStageNumText(); })
-            .AddTo(this.gameObject);
-
         gameObject.SetActive(true);
+        startButton.onClick.AddListener(OnClickStartButton);
 
     }
 
     public override void OnUpdate()
     {
         if (!base.IsThisScreen()) { return; }
+        if (Variables.gameState == GameState.CountDown)
+        {
+            int num = Mathf.CeilToInt(timer);
+            countDownText.text = num.ToString("F0");
+            timer -= Time.deltaTime;
+            if (timer < 0)
+            {
+                Variables.gameState = GameState.Play;
+                countDownText.gameObject.SetActive(false);
+            }
+        }
 
     }
 
@@ -44,8 +54,17 @@ public class GameCanvasManager : BaseCanvasManager
         // gameObject.SetActive(false);
     }
 
-    void ShowStageNumText()
+    public override void OnInitialize()
     {
-        stageNumText.text = "Stage " + (Variables.currentStageIndex + 1).ToString("000");
+        countDownText.gameObject.SetActive(false);
+        Variables.gameState = GameState.Start;
+    }
+
+    void OnClickStartButton()
+    {
+        Variables.gameState = GameState.CountDown;
+        startButton.gameObject.SetActive(false);
+        countDownText.gameObject.SetActive(true);
+        timer = 3;
     }
 }

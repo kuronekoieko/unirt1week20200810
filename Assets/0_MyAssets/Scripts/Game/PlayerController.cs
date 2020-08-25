@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Variables.gameState != GameState.Play) return;
         if (playerNum == 0)
         {
             MoveForward();

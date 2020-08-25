@@ -6,6 +6,7 @@ using DG.Tweening;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Transform center;
+    [SerializeField] int playerNum;
     Rigidbody[] rigidbodies;
     float speed;
     EyeController[] eyeControllers;
@@ -23,7 +24,30 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        MoveForward();
+        if (playerNum == 0)
+        {
+            MoveForward();
+        }
+        else
+        {
+            AutoMoveForward();
+        }
+    }
+
+    void AutoMoveForward()
+    {
+
+        speed += Time.deltaTime * playerNum / 2;
+        speed = Mathf.Clamp(speed, 0, 10);
+
+        for (int i = 0; i < rigidbodies.Length; i++)
+        {
+            var vec = Vector3.Cross(rigidbodies[i].transform.position - center.position, Vector3.forward);
+            if (vec.x < 0) continue;
+            vec.y /= 2;
+            vec.x *= 2;
+            rigidbodies[i].velocity = vec * speed;
+        }
     }
 
     void MoveForward()

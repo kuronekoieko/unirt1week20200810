@@ -9,6 +9,7 @@ using DG.Tweening;
 /// </summary>
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] Transform centerTf;
     public static CameraController i;
     void Start()
     {
@@ -18,5 +19,12 @@ public class CameraController : MonoBehaviour
     void Update()
     {
 
+    }
+
+    private void LateUpdate()
+    {
+        var pos = transform.position;
+        pos.x = centerTf.position.x;
+        transform.position = pos;
     }
 }

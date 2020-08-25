@@ -51,28 +51,38 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnterEye(Collider other)
     {
-        if (isPressed) return;
-        if (other.gameObject.CompareTag("Trap"))
-        {
-            isPressed = true;
-            foreach (var rb in rigidbodies)
-            {
-                rb.isKinematic = true;
-            }
-            transform.localScale = new Vector3(1, 0.1f, 1);
-            transform.position -= Vector3.up * 2.5f;
-            DOVirtual.DelayedCall(1.5f, () =>
-            {
-                foreach (var rb in rigidbodies)
-                {
-                    rb.isKinematic = false;
-                }
-                transform.localScale = new Vector3(1, 1, 1);
-                transform.position += Vector3.up * 2.5f;
-                isPressed = false;
-            });
-        }
+        Pressed(other);
     }
 
+    void Goal(Collider other)
+    {
+        if (other.gameObject.CompareTag("Goal") == false) { return; }
+        if (Variables.screenState == ScreenState.Game) return;
+        Variables.screenState = ScreenState.Clear;
+    }
+
+    void Pressed(Collider other)
+    {
+        if (isPressed) return;
+        if (other.gameObject.CompareTag("Trap") == false) { return; }
+
+        isPressed = true;
+        foreach (var rb in rigidbodies)
+        {
+            rb.isKinematic = true;
+        }
+        transform.localScale = new Vector3(1, 0.1f, 1);
+        transform.position -= Vector3.up * 2.5f;
+        DOVirtual.DelayedCall(1.5f, () =>
+        {
+            foreach (var rb in rigidbodies)
+            {
+                rb.isKinematic = false;
+            }
+            transform.localScale = new Vector3(1, 1, 1);
+            transform.position += Vector3.up * 2.5f;
+            isPressed = false;
+        });
+    }
 
 }

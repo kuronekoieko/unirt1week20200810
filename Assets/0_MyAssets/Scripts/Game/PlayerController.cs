@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     float speed;
     EyeController[] eyeControllers;
     bool isPressed;
+    bool isGoaled;
     void Start()
     {
         rigidbodies = GetComponentsInChildren<Rigidbody>();
@@ -21,10 +22,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     void Update()
     {
         if (Variables.gameState != GameState.Play) return;
+        if (isGoaled) return;
         if (playerNum == 0)
         {
             MoveForward();
@@ -77,12 +78,17 @@ public class PlayerController : MonoBehaviour
     void OnTriggerEnterEye(Collider other)
     {
         Pressed(other);
+        Goal(other);
     }
 
     void Goal(Collider other)
     {
+        if (isGoaled) return;
         if (other.gameObject.CompareTag("Goal") == false) { return; }
-        if (Variables.screenState == ScreenState.Game) return;
+        if (Variables.screenState != ScreenState.Game) return;
+        isGoaled = true;
+        Variables.ranking.Add(playerNum);
+        if (playerNum != 0) return;
         Variables.screenState = ScreenState.Clear;
     }
 
@@ -98,7 +104,7 @@ public class PlayerController : MonoBehaviour
         }
         transform.localScale = new Vector3(1, 0.1f, 1);
         transform.position -= Vector3.up * 2.5f;
-        DOVirtual.DelayedCall(1.5f, () =>
+        DOVirtual.DelayedCall(2f, () =>
         {
             foreach (var rb in rigidbodies)
             {

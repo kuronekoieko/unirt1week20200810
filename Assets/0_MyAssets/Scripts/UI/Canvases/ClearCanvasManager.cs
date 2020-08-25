@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using DG.Tweening;
-
+using System.Linq;
 public class ClearCanvasManager : BaseCanvasManager
 {
     [SerializeField] Button nextButton;
+    [SerializeField] Text rankText;
 
     public override void OnStart()
     {
@@ -25,8 +26,9 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
-        UICameraController.i.PlayConfetti();
-        DOVirtual.DelayedCall(1.2f, () =>
+        rankText.text = (Variables.ranking.IndexOf(0) + 1) + "位";
+        //UICameraController.i.PlayConfetti();
+        DOVirtual.DelayedCall(0f, () =>
         {
             gameObject.SetActive(true);
         });
@@ -35,6 +37,11 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnClose()
     {
         gameObject.SetActive(false);
+    }
+
+    public override void OnInitialize()
+    {
+        Variables.ranking = new List<int>();
     }
 
     void OnClickNextButton()
@@ -48,4 +55,5 @@ public class ClearCanvasManager : BaseCanvasManager
         Variables.screenState = ScreenState.Home;
         SoundManager.i.PlayOneShot(0);
     }
+
 }

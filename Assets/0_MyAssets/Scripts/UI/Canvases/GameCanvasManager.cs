@@ -58,6 +58,7 @@ public class GameCanvasManager : BaseCanvasManager
     {
         countDownText.gameObject.SetActive(false);
         Variables.gameState = GameState.Start;
+        startButton.gameObject.SetActive(true);
     }
 
     void OnClickStartButton()

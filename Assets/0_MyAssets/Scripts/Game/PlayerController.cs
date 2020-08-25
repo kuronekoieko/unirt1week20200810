@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isPressed) return;
         if (other.gameObject.CompareTag("Trap") == false) { return; }
-
+        if (playerNum == 0) SoundManager.i?.PlayOneShot(3);
         isPressed = true;
         foreach (var rb in rigidbodies)
         {

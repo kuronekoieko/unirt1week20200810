@@ -67,5 +67,6 @@ public class GameCanvasManager : BaseCanvasManager
         startButton.gameObject.SetActive(false);
         countDownText.gameObject.SetActive(true);
         timer = 3;
+        SoundManager.i.PlayOneShot(2);
     }
 }

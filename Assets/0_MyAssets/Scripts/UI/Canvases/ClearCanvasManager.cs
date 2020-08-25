@@ -26,6 +26,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
+        SoundManager.i.PlayOneShot(1);
         rankText.text = (Variables.ranking.IndexOf(0) + 1) + "位";
         //UICameraController.i.PlayConfetti();
         DOVirtual.DelayedCall(0f, () =>

@@ -19,20 +19,21 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-
+            speed += Time.deltaTime * 3;
         }
         else
         {
-
+            speed -= Time.deltaTime * 3;
         }
+        speed = Mathf.Clamp(speed, 0, 10);
 
         for (int i = 0; i < rigidbodies.Length; i++)
         {
             var vec = Vector3.Cross(rigidbodies[i].transform.position - center.position, Vector3.forward);
-            if (vec.y > 0) vec.y /= 2;
             if (vec.x < 0) continue;
+            vec.y /= 2;
             vec.x *= 2;
-            rigidbodies[i].velocity = vec * 10;
+            rigidbodies[i].velocity = vec * speed;
         }
     }
 }
